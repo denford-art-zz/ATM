@@ -29,4 +29,38 @@ public class Account{
     public String getUUID() {
         return this.uuid;
     }
+
+    /**
+     * Get summary line for the account
+     * @return the string summary
+     */
+    public String getSummaryLine() {
+        double balance = this.getBalance();
+
+        if (balance >= 0) {
+            return String.format("%s: $%.02f : %s",
+                    this.uuid, balance, this.name);
+        } else {
+            return String.format("%s: $(%.02f) : %s",
+                    this.uuid, balance, this.name);
+        }
+    }
+
+    public double getBalance() {
+
+        double balance = 0;
+        for (Transaction t : this.transactions) {
+            balance += t.getAmount();
+        }
+        return balance;
+    }
+    public void printTransactionsHistory() {
+        System.out.printf("\nTransaction history for account %s\n",
+                this.uuid);
+
+        for (int t = this.transactions.size()-1; t >= 0; t--) {
+            System.out.printf(this.transactions.get(t).getSummaryLine());
+        }
+        System.out.println();
+    }
 }
