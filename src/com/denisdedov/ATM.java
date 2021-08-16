@@ -10,7 +10,7 @@ public class ATM {
         Bank theBank = new Bank("Bank of Valhalla");
 
         User user = theBank.addUser("Thor", "Odinson", "1234");
-        Account newAccount = new Account("Testing", user, theBank);
+        Account newAccount = new Account("Odin", user, theBank);
         user.addAccount(newAccount);
         theBank.addAccount(newAccount);
 
@@ -57,10 +57,11 @@ public class ATM {
         do {
             System.out.printf("Welcome %s, what would you like to do?",
                     user.getFirstName());
-            System.out.println("1) Show account transaction history\n" +
+            System.out.println("\n1) Show account transaction history\n" +
                     "2) Withdraw\n" +
-                    "3) Transfer\n" +
-                    "4) Quit");
+                    "3) Deposit\n" +
+                    "4) Transfer\n" +
+                    "5) Quit");
             System.out.println("Enter choice: ");
             choice = scanner.nextInt();
 
@@ -74,7 +75,7 @@ public class ATM {
                 ATM.showTransactionHistory(user, scanner);
                 break;
             case 2:
-                ATM.withdrawlFunds(user, scanner);
+                ATM.withdrawFunds(user, scanner);
                 break;
             case 3:
                 ATM.depositFunds(user, scanner);
@@ -82,6 +83,10 @@ public class ATM {
             case 4:
                 ATM.transferFunds(user, scanner);
                 break;
+            case 5:
+                scanner.nextLine();
+                break;
+
         }
 
         if (choice != 5) {
@@ -103,5 +108,126 @@ public class ATM {
         } while (theAcc < 0 || theAcc >= user.numAccounts());
 
         user.printAccountsHistory(theAcc);
+    }
+
+    public static void transferFunds(User user, Scanner scanner) {
+
+        int fromAccount;
+        int toAccount;
+        double amount;
+        double accountBalance;
+
+        do {
+            System.out.printf("Enter the number (1-%d) of the account\n" +
+                    "to transfer from: ", user.numAccounts());
+            fromAccount = scanner.nextInt()-1;
+            if (fromAccount < 0 || fromAccount >= user.numAccounts()) {
+                System.out.println("Incorrect user ID or pin.\n" +
+                        "Please try again.");
+            }
+        } while(fromAccount < 0 || fromAccount >= user.numAccounts());
+        accountBalance = user.getAccountBalance(fromAccount);
+
+        do {
+            System.out.printf("Enter the number (1-%d) of the account\n" +
+                    "to transfer to: ", user.numAccounts());
+            toAccount = scanner.nextInt()-1;
+            if (toAccount < 0 || toAccount >= user.numAccounts()) {
+                System.out.println("Incorrect user ID or pin.\n" +
+                        "Please try again.");
+            }
+        } while(toAccount < 0 || toAccount >= user.numAccounts());
+
+        do {
+            System.out.printf("Enter the amount to transfer (max $%.02f): $",
+                    accountBalance);
+            amount = scanner.nextDouble();
+            if (amount < 0) {
+                System.out.println("Amount must be greater than 0");
+            } else if (amount > accountBalance) {
+                System.out.printf("Amount not can greater than balance\n" +
+                        "Balance: $%.02f", accountBalance);
+            }
+        } while (amount < 0 || amount > accountBalance);
+
+        user.addAccountTransaction(fromAccount, -1*amount,
+                String.format("Transfer to account %s",
+                        user.getAccountUUID(toAccount)));
+        user.addAccountTransaction(toAccount, amount,
+                String.format("Transfer to account %s",
+                        user.getAccountUUID(fromAccount)));
+    }
+
+    public static void withdrawFunds(User user, Scanner scanner) {
+
+        int fromAccount;
+        double amount;
+        double accountBalance;
+        String memo;
+
+        do {
+            System.out.printf("Enter the number (1-%d) of the account\n" +
+                    "to withdraw from: ", user.numAccounts());
+            fromAccount = scanner.nextInt()-1;
+            if (fromAccount < 0 || fromAccount >= user.numAccounts()) {
+                System.out.println("Incorrect user ID or pin.\n" +
+                        "Please try again.");
+            }
+        } while(fromAccount < 0 || fromAccount >= user.numAccounts());
+        accountBalance = user.getAccountBalance(fromAccount);
+
+        do {
+            System.out.printf("\nEnter the amount to transfer (max $%.02f): $",
+                    accountBalance);
+            amount = scanner.nextDouble();
+            if (amount < 0) {
+                System.out.println("Amount must be greater than 0");
+            } else if (amount > accountBalance) {
+                System.out.printf("Amount not can greater than balance\n" +
+                        "Balance: $%.02f", accountBalance);
+            }
+        } while (amount < 0 || amount > accountBalance);
+
+        scanner.nextLine();
+
+        System.out.println("Enter a memo: ");
+        memo = scanner.nextLine();
+
+        user.addAccountTransaction(fromAccount, -1*amount, memo);
+
+    }
+
+    public static void depositFunds(User user, Scanner scanner) {
+        int toAccount;
+        double amount;
+        double accountBalance;
+        String memo;
+
+        do {
+            System.out.printf("Enter the number (1-%d) of the account\n" +
+                    "to deposit in: ", user.numAccounts());
+            toAccount = scanner.nextInt()-1;
+            if (toAccount < 0 || toAccount >= user.numAccounts()) {
+                System.out.println("Incorrect user ID or pin.\n" +
+                        "Please try again.");
+            }
+        } while(toAccount < 0 || toAccount >= user.numAccounts());
+        accountBalance = user.getAccountBalance(toAccount);
+
+        do {
+            System.out.printf("\nEnter the amount to transfer (max $%.02f): $",
+                    accountBalance);
+            amount = scanner.nextDouble();
+            if (amount < 0) {
+                System.out.println("Amount must be greater than 0");
+            }
+        } while (amount < 0);
+
+        scanner.nextLine();
+
+        System.out.println("Enter a memo: ");
+        memo = scanner.nextLine();
+
+        user.addAccountTransaction(toAccount, amount, memo);
     }
 }

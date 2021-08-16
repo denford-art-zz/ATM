@@ -81,7 +81,7 @@ public class User {
      * Print summaries for the accounts of this user.
      */
     public void printAccountsSummary() {
-        System.out.printf("\n%s's account summary", this.firstName);
+        System.out.printf("\n%s's account summary\n", this.firstName);
         for (int a = 0; a < this.accounts.size(); a++) {
             System.out.printf("%d) %s\n", a + 1,
                     this.accounts.get(a).getSummaryLine());
@@ -99,5 +99,18 @@ public class User {
      */
     public void printAccountsHistory(int accountIndex) {
         this.accounts.get(accountIndex).printTransactionsHistory();
+    }
+
+    public double getAccountBalance(int accountIndex) {
+        return  this.accounts.get(accountIndex).getBalance();
+    }
+
+    public String getAccountUUID(int accountIndex) {
+        return this.accounts.get(accountIndex).getUUID();
+    }
+
+    public void addAccountTransaction(
+            int accountIndex, double amount, String memo) {
+        this.accounts.get(accountIndex).addTransaction(amount, memo);
     }
 }
