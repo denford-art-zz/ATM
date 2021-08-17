@@ -25,7 +25,7 @@ public class Bank {
      */
     public String getNewUserUUID() {
         String uuid;
-        Random rng = new Random();
+        Random random = new Random();
         int length = 6;
         boolean nonUnique;
 
@@ -33,7 +33,7 @@ public class Bank {
             // generate the UUID
             uuid = "";
             for (int i = 0; i < length; i++) {
-                uuid += ((Integer)rng.nextInt(10)).toString();
+                uuid += ((Integer)random.nextInt(10)).toString();
             }
 
             // checks the uniqueness of the id
@@ -56,7 +56,7 @@ public class Bank {
     public String getNewAccountUUID() {
 
         String uuid;
-        Random rng = new Random();
+        Random random = new Random();
         int length = 10;
         boolean nonUnique;
 
@@ -64,7 +64,7 @@ public class Bank {
             // generate the UUID
             uuid = "";
             for (int i = 0; i < length; i++) {
-                uuid += ((Integer)rng.nextInt(10)).toString();
+                uuid += ((Integer)random.nextInt(10)).toString();
             }
 
             // checks the uniqueness of the id
@@ -117,11 +117,11 @@ public class Bank {
      */
     public User userLogin(String userID, String pin) {
 
-        for (User u : this.users) {
+        for (User user : this.users) {
 
             // check user ID is correct
-            if (u.getUUID().compareTo(userID) == 0 && u.validatePin(pin)) {
-                return u;
+            if (user.getUUID().compareTo(userID) == 0 && user.validatePin(pin)) {
+                return user;
             }
         }
         // if user not found or incorrect pin

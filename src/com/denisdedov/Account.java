@@ -49,8 +49,8 @@ public class Account{
     public double getBalance() {
 
         double balance = 0;
-        for (Transaction t : this.transactions) {
-            balance += t.getAmount();
+        for (Transaction transaction : this.transactions) {
+            balance += transaction.getAmount();
         }
         return balance;
     }

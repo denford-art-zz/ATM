@@ -89,6 +89,10 @@ public class User {
         System.out.println();
     }
 
+    /**
+     *
+     * @return the number of accounts
+     */
     public int numAccounts() {
         return this.accounts.size();
     }
